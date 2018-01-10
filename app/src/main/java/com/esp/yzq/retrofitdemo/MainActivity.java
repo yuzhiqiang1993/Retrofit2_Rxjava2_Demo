@@ -10,6 +10,9 @@ import android.widget.Toast;
 import com.blankj.ALog;
 import com.google.gson.Gson;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
@@ -76,15 +79,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RetrofitFactory.getInstence()
                 .getService()
                 .getNews()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(this.<NewsBean>applyScheduler())
                 .subscribe(new BaseObserver<NewsBean>() {
                     @Override
                     public void onNext(NewsBean newsBean) {
                         super.onNext(newsBean);
-
                         ALog.i(new Gson().toJson(newsBean));
-
                         mRxResultTv.setText(newsBean.getReason());
                     }
                 });
@@ -99,5 +99,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mRxBtn.setOnClickListener(this);
         mCallResultTv = (TextView) findViewById(R.id.callResultTv);
         mRxResultTv = (TextView) findViewById(R.id.rxResultTv);
+    }
+
+
+    public <T> ObservableTransformer<T, T> applyScheduler() {
+
+        return new ObservableTransformer<T, T>() {
+            @Override
+            public ObservableSource<T> apply(Observable<T> upstream) {
+                return upstream.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread());
+            }
+        };
     }
 }
