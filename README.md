@@ -1,0 +1,2 @@
+# Retrofit2_Rxjava2_Demo
+Retrofie2传统用法以及结合Rxjava2使用的示例
