@@ -10,6 +10,9 @@ import android.widget.Toast;
 import com.blankj.ALog;
 import com.google.gson.Gson;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
@@ -75,10 +78,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void getRxData() {
 
+        Map<String, String> paramsMap = new HashMap<>();
+        paramsMap.put("type", "toutiao");
+        paramsMap.put("key", Urls.KEY);
+
+//
+//        RequestBean requestBean =new RequestBean();
+//        requestBean.setType("keji");
+//        requestBean.setKey(Urls.KEY);
 
         RetrofitFactory.getInstence()
                 .getService()
-                .getNews()
+                // .getNews()
+                // .getNewsWithPathQuery("index","keji",Urls.KEY)
+                //.getNewsWithQuery("tiyu",Urls.KEY)
+                //.getNewsWithQueryMap(paramsMap)
+                //.postNews()
+                // .postNewsWithField(Urls.KEY,"keji")
+                .postNewsWithFieldMap(paramsMap)
                 .compose(this.<NewsBean>applyScheduler())
                 .subscribe(new BaseObserver<NewsBean>() {
                     @Override

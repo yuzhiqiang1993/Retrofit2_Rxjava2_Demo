@@ -28,7 +28,7 @@ public class RetrofitFactory {
     public RetrofitFactory() {
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://v.juhe.cn/toutiao/")
+                .baseUrl(Urls.BASE_URL)
                 .client(initClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
